@@ -1,0 +1,57 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url(base/_globales.scss);
+@import url(base/_mixins.scss);
+@import url(base/_utilidades.scss);
+@import url(base/_variables.scss);
+@import url(base/_normalize.scss);
+
+body {
+    background-color: var(--background-color);
+}
+.contenido-anuncio {
+    background-color: var(--background-color2);
+}
+.iconos-caracteristicas img{
+    filter: var(--filter);
+}
+
+p,a,h1,h2,h3,h4 {
+    color: var(--text-color);
+
+}
+fieldset {
+    background-color: var(--background-color2);
+    color: var(--text-color);
+    p,legend,label {
+    color: var(--text-color) !important;
+
+    }
+}
+.boton {
+    color: var(--blanco);
+    font-weight: var(--bold);
+    padding: 1rem 3rem;
+    text-align: center;
+    margin-top: 5rem / 2;
+
+    
+}
+.boton-amarillo {
+    display: block;
+    background-color: var(--amarillo);
+    
+    &:hover {
+        background-color: darken(#E08709, 5);
+    }
+}
+
+.boton-verde {
+    display: inline-block;
+    background-color: var(--verde);
+    color: var(--blanco);
+    &:hover {
+        background-color: darken(#71B100, 5);
+    }
+}
+

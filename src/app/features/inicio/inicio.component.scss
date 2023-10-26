@@ -1,0 +1,194 @@
+.titulo {
+    padding-top: 5rem;
+}
+
+.icono {
+    text-align: center;
+    padding: 2rem;
+    img {
+        height: 10rem;
+    }
+    h3 {
+        text-transform: uppercase;
+    }
+}
+
+.anuncio {
+    background-color:  var(--gris);
+    border: 1px solid  #b8b8b8;
+    margin-bottom: 2rem;
+    border-radius: 2%;
+
+    img {
+        border-top-left-radius:2%;
+        border-top-right-radius: 2%;
+    }
+}
+
+.contenido-anuncio {
+    padding: 2rem;
+    
+    h3, p {
+    margin: 0;
+    }
+}
+
+
+.precio {
+    color: var(--verde);
+    font-weight: var(--bold);
+    font-size: 2rem;
+}
+
+.iconos-caracteristicas {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    padding: 0;
+
+    p {
+        padding: 1rem;
+        text-align: center;
+        font-weight: var(--black);
+    }
+}
+
+.alinear-derecha {
+    display: flex;
+    justify-content: flex-end;
+    padding: 2rem 0;
+}
+
+.imagen-contacto {
+    margin: 2rem 0;
+    background-image: url(/assets/img/encuentra.jpg);
+    background-position: center center;
+    background-size: cover;
+    padding: 5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 20%rem;
+
+    h2 {
+        font-size: 3.5rem;
+        font-weight: var(--black);
+        color: var(--blanco);
+        padding: 2rem;
+    }
+
+    p {
+        font-size: 1.8rem;
+        color: var(--blanco);
+        padding: 2rem;
+
+    }
+}
+
+// SECCION BLOG
+.entrada-blog {
+    margin-bottom: 2rem;
+    padding: 2rem;
+    border-bottom: var(--gris) solid 1px;
+
+    picture {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.texto-entrada {
+    a {
+        
+        p {
+            font-size: 1.5rem;
+        }
+    }
+
+    h4 {
+        margin: 0;
+        line-height: 1.5;
+
+        &::after {
+            content: '';
+            display: block;
+            width: 15rem;
+            height: .5rem;
+            margin-top: 2rem;
+            background-color: var(--verde);
+        }
+    }
+    
+    span {
+        color: var(--amarillo);
+    }
+}
+// TESTIMONIALES
+.testimoniales {
+    margin-bottom: 2rem;
+}
+
+.testimonial {
+    background-color: var(--verde);
+    font-size: 2.2rem;
+    padding: 2rem;
+    color: var(--blanco);
+    border-radius: 2rem;
+    
+    p {
+        text-align: right;
+    }
+
+
+    blockquote {
+        padding-left: 5rem;
+        position: relative;
+        
+        &::before {
+            content: '';
+            background-image: url(/assets/img/comilla.svg);
+            background-repeat: no-repeat;
+            width: 6rem;
+            height: 8rem;
+            display: block;
+            position: absolute;
+            left: -2rem;
+            top: 0;
+        }
+    }
+}
+
+
+@media (min-width: 768px /*tablet*/) {
+    main  {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 14rem;
+    }
+    .contenedor-anuncios {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 14rem;
+    }
+
+    // SECCION BLOG
+    .seccion-inferior {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        column-gap: 2rem;
+    }
+    .entrada-blog {
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+
+    .imagen {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        column-gap: 2rem;
+        gap: 2rem;
+    }
+}

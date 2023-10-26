@@ -1,0 +1,53 @@
+.texto-sobreNosotros {
+    padding: 2rem 4rem;
+}
+h2 {
+    text-align: start;
+    margin-top: 0;
+    font-size: 2.3rem;
+    font-weight: var(--bold);
+}
+h1 {
+    margin: 6rem 0;
+}
+
+// SECCION SOBRE NOSOTROS
+.servicios {
+    display: block;
+    margin-bottom: 6rem;
+    border: none;
+    
+}
+.iconos-nosotros {
+    display: block;
+}
+.icono {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 10rem;
+
+    img {
+        height: 10rem;
+    }
+    h3 {
+        text-transform: uppercase;
+    }
+}
+
+@media (min-width: 768px /*tablet*/) {
+    section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        padding: 2rem;
+        margin: 0;
+        border-bottom: 1px solid var(--gris);
+    }
+    .texto-sobreNosotros {
+        padding: 0;
+    }
+    .iconos-nosotros {
+        display: flex;
+        gap: 2rem;
+    }  
+}

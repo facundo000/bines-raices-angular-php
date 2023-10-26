@@ -1,0 +1,63 @@
+<main class="contenedor seccion">
+    <h1>Crear</h1>
+
+    <a [routerLink]="'/admin'" class="boton boton-verde">Volver</a>
+
+    <form class="formulario" [formGroup]="form" (ngSubmit)="enviarForm()">
+        <fieldset>
+            <legend>Información General</legend>
+
+            <label for="titulo">Titulo:</label>
+            <input type="text" formControlName="titulo" name="titulo" placeholder="Titulo Propiedad" id="titulo">
+            <span *ngIf="form.get('titulo')?.errors?.['required']">Debes añadir un título a la propiedad</span>
+           
+            <label for="precio">Precio:</label>
+            <input type="number" formControlName="precio" name="precio" placeholder="Precio Propiedad" id="precio" min="0">
+            <span *ngIf="form.get('precio')?.errors?.['required']">Debes añadirle un precio a la propiedad</span>
+
+
+            <label for="imagen">Imagen:</label>
+            <input type="file" id="imagen" accept="image/jpeg, image/png, image/webp">
+
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" formControlName="descripcion" placeholder="Descripción de la Propiedad"></textarea>
+            <span *ngIf="form.get('descripcion')?.errors?.['minlength']">La descripción es obligatoria y debe tener al menos 50 carácteres</span>
+            <p class="char-counter">{{ descripcionLength }}</p>
+
+
+        </fieldset>
+
+        <fieldset>
+            <legend>Información Propiedad</legend>
+
+            <label for="habitaciones">Habitaciones:</label>
+            <input type="number" formControlName="habitaciones" name="habitaciones" placeholder="Ej: 3" id="habitaciones" min="1">
+            <span *ngIf="form.get('habitaciones')?.errors?.['required']">El número de habitaciones es obligatorio</span>
+
+
+            <label for="wc">Baños:</label>
+            <input type="number" formControlName="wc" name="wc" placeholder="Ej: 3" id="wc" min="1">
+            <span *ngIf="form.get('wc')?.errors?.['required']">El número de baños es obligatorio</span>
+
+
+            <label for="estacionamiento">Estacionamiento:</label>
+            <input type="number" formControlName="estacionamiento" name="estacionamiento" placeholder="Ej: 3" id="estacionamiento" min="1">
+            <span *ngIf="form.get('estacionamiento')?.errors?.['required']">El número de lugares de estacionamiento es obligatorio</span>
+
+
+        </fieldset>
+
+        <fieldset>
+            <legend>Vendedor</legend>
+
+            <select name="vendedores" id="vendedores_id" formControlName="vendedores">
+                <option value="">-- Seleccione --</option>
+                <option value="1">Facundo</option>
+                <option value="2">Horacio</option>
+            </select>
+            <span *ngIf="form.get('vendedores')?.errors?.['required']">Elige un vendedor</span>
+
+        </fieldset>
+        <input type="submit" value="Enviar" class="boton boton-verde">
+    </form>
+</main>

@@ -1,0 +1,36 @@
+<header class="header" [ngClass]="{
+    'inicio-style': pageStyles['isInicioPage'],
+    'anuncios-style': pageStyles['isAnunciosPage']
+  }">
+    <div class="contenedor contenido-header">
+        <div class="barra">
+            <a [routerLink]="['']">
+                <img src="../../assets/img/logo.svg" alt="Logotipo de Bienes Raices">
+            </a>
+
+            <div class="mobile-menu" >
+                <input id="checkbox" type="checkbox" (click)="toggleNav()" [ngClass]="{'mostrar': isVisible}">
+                <label class="toggle" for="checkbox">
+                    <div id="bar1" class="bars"></div>
+                    <div id="bar2" class="bars"></div>
+                    <div id="bar3" class="bars"></div>
+                </label>
+            </div>
+
+            <div class="derecha">
+                <label class="switch">
+                    <input type="checkbox" [ngClass]="{'dark-mode': isDarkMode}" (click)="darkMode()">
+                    <span class="slider"></span>
+                </label>
+                
+                <nav class="navegacion">
+                    <a [routerLink]="['nosotros']">Nosotros</a>
+                    <a [routerLink]="['anuncios']">Anuncios</a>
+                    <a [routerLink]="['blog']">Blog</a>
+                    <a [routerLink]="['contacto']">Contacto</a>
+                </nav>
+            </div>
+        </div>  <!--.barra-->
+        <h1>Venta de Casas y Departamentos Exclusivos de Lujo</h1>
+    </div>
+</header>
