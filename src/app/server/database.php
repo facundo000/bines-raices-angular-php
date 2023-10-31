@@ -29,20 +29,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     var_dump($_POST);
     echo '</pre>';
 
-    $titulo = $_POST['titulo'];
-    $precio = $_POST['precio'];
-    $descripcion = $_POST['descripcion'];
-    $habitaciones = $_POST['habitaciones'];
-    $wc = $_POST['wc'];
-    $estacionamiento = $_POST['estacionamiento'];
-    $vendedores_id = $_POST['vendedores'];
+    $titulo = mysqli_real_escape_string( $db, $_POST['titulo']);
+    $precio = mysqli_real_escape_string( $db, $_POST['precio']);
+    $descripcion = mysqli_real_escape_string( $db, $_POST['descripcion']);
+    $habitaciones = mysqli_real_escape_string( $db, $_POST['habitaciones']);
+    
+    $creado = (date('Y/m/d'));
+    
+    $wc = mysqli_real_escape_string( $db, $_POST['wc']);
+    $estacionamiento = mysqli_real_escape_string( $db, $_POST['estacionamiento']);
+    $vendedores_id = mysqli_real_escape_string( $db, $_POST['vendedores']);
 
     //INSERTAR VALORES EN LA BASE DE DATOS
-    // $query = " INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, vendedores_id ) VALUES ('$titulo', '$precio', '$descripcion', '$habitaciones', '$wc',' $estacionamiento', '$vendedores_id')";
+    $query = " INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, creado, vendedores_id ) VALUES ('$titulo', '$precio', '$descripcion', '$habitaciones', '$wc',' $estacionamiento', '$creado', '$vendedores_id')";
 
     // echo $query;
 
-    // $resultado = mysqli_query($db, $query);
+    $resultado = mysqli_query($db, $query);
+    // $resultado = true;
 
     if($resultado) {
         // echo "Insertado Correctamente";

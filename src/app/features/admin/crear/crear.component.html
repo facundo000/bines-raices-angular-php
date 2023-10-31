@@ -52,8 +52,7 @@
 
             <select name="vendedores" id="vendedores_id" formControlName="vendedores">
                 <option value="">-- Seleccione --</option>
-                <option value="1">Facundo</option>
-                <option value="2">Horacio</option>
+                <option *ngFor="let vendedor of venderdores" [value]="vendedor.id">{{vendedor.nombre}} {{vendedor.apellido}} </option>
             </select>
             <span *ngIf="form.get('vendedores')?.errors?.['required']">Elige un vendedor</span>
 

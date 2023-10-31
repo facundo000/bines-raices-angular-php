@@ -1,18 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { DateService } from '../../services/date/date.service';
+import { Component, VERSION } from '@angular/core';
+import { DatePipe } from '@angular/common';
+
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })
-export class FooterComponent implements OnInit {
-  date!: string;
+export class FooterComponent {
 
-  constructor(private dateService: DateService) {}
-
-  ngOnInit(): void {
-    this.dateService.obtenerDate().subscribe(date => {
-      this.date = date;
-    });
-  }
+  name = 'Angular ';
+  today = new Date().getFullYear();
 }
