@@ -3,27 +3,25 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, X-Requested-With");
 
+// IMPORTAR CONEXIÓN
 $db = mysqli_connect('localhost', 'root', 'keysudo', 'bienesraices_crud');
 
-// Verificacion de conexión
-if($db->connect_error) {
-    die("Conexión fallida " . $db->connect_error);
+// ESCRIBIR EL Query
+$query = "SELECT * FROM propiedades";
+
+// CONSULTAR LA BD
+$resultado = mysqli_query($db, $query);
+ //SE CREA UN ARRAY
+$data = array();
+
+while($row = mysqli_fetch_assoc($resultado)) {
+    // Se agrega esos datos en el array
+   $data[] = $row;
 }
 
-// Ejecutar consulta SQL
-$sql = "SELECT id, nombre, apellido FROM vendedores";
-$resultado = $db->query($sql);
+// Acceder los campos de cada registro en formato JSON
+echo  json_encode($data);
 
-$vendedores = array();
+mysqli_close($db);
 
-if($resultado->num_rows > 0) {
-    while($vendedor = $resultado->fetch_assoc()) {
-        $vendedores[] = $vendedor;
-    }
-} else {
-    echo "0 resultados";
-}
-
-echo json_encode($vendedores);
-
- ?>
+?>

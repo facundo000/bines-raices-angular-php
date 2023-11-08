@@ -2,4 +2,29 @@
     <h1>Administrador de Bienes Raices</h1>
 
     <a [routerLink]="'crear'" class="boton boton-verde">Nueva propiedad</a>
+
+    <table class="propiedades">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Imagen</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        
+        <tbody *ngFor="let dato of datos">
+            <tr>
+                <td >{{dato.id}}</td>
+                <td>{{dato.titulo}}</td>
+                <td><img src="../../../assets/img/{{dato.imagen}}" alt="imagen {{dato.titulo}}" class="imagen-tabla"></td>
+                <td>${{dato.precio}}</td>
+                <td>
+                    <a href="" class="boton boton-rojo">Eliminar</a>
+                    <a href="" class="boton boton-amarillo">Actualizar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </main>

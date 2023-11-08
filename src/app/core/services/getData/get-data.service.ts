@@ -9,7 +9,11 @@ export class GetDataService {
 
   constructor(private http: HttpClient) { }
 
-  getVendedores(): Observable<any> {
+  getData(): Observable<any> {
     return this.http.get('http://localhost:3031/getData.php');
+  }
+
+  getVendedores(): Observable<any> {
+    return this.http.get('http://localhost:3031/getVendedores.php');
   }
 }

@@ -55,3 +55,12 @@ fieldset {
     }
 }
 
+.boton-rojo {
+    display: block;
+    background-color: var(--rojo);
+    color: var(--blanco);
+    &:hover {
+        background-color: darken(#ff1313, 5);
+    }
+}
+

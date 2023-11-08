@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { GetDataService } from 'src/app/core/services/getData/get-data.service';
 
@@ -12,8 +13,10 @@ export class CrearComponent implements OnInit {
   form: FormGroup;
   descripcionLength = 0;
   venderdores: any;
+  selectedFile: File | any;
+  imagenError: string | null = null;
 
-  constructor(private http: HttpClient, private getDataService: GetDataService) {
+  constructor(private http: HttpClient, private getDataService: GetDataService, private router: Router) {
     this.form = new FormGroup({
       'titulo': new FormControl('', Validators.required),
       'precio': new FormControl('', [Validators.required, Validators.minLength(1)]),
@@ -24,6 +27,7 @@ export class CrearComponent implements OnInit {
       'vendedores': new FormControl('', Validators.required)
     });
 
+    // Contador de carácteres
     this.form.get('descripcion')?.valueChanges.subscribe(value => {
       this.descripcionLength = value ? value.length : 0;
       const contador = document.querySelector('.char-counter');
@@ -38,8 +42,30 @@ export class CrearComponent implements OnInit {
     });
   }
 
+
+  // Restricciones para imagenes
+  onFileSelected(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files) {
+        this.selectedFile = fileInput.files[0];
+
+      // Verificar el tamañp del archivo
+      const medida = 1000 * 1000; // = 1mb
+      if(this.selectedFile.size > medida) {
+        this.imagenError = 'Imagen demasido grande';
+        this.selectedFile = null;
+        return
+      }
+      this.imagenError = null;
+    } else {
+      this.imagenError = 'Debes seleccionar una imagen';
+      this.selectedFile = null;
+    }
+    
+  }
+
   enviarForm() {
-    if(this.form.valid) {
+    if(this.form.valid && this.selectedFile) {
       const formData = new FormData();
       formData.append('titulo', this.form.get('titulo')?.value);
       formData.append('precio', this.form.get('precio')?.value);
@@ -48,24 +74,34 @@ export class CrearComponent implements OnInit {
       formData.append('wc', this.form.get('wc')?.value);
       formData.append('estacionamiento', this.form.get('estacionamiento')?.value);
       formData.append('vendedores', this.form.get('vendedores')?.value);
+      
+      formData.append('imagen', this.selectedFile);
 
       this.http.post('http://localhost:3030/database.php', formData, {responseType: 'text'})
       .subscribe(
         (response) => {
           console.log('éxito:', response);
-          this.form.reset(); // resetea el formulario
           alert('Formulario enviado con éxito!!'); // muestra un mensaje de éxito
+          this.router.navigate(['/admin']); // Me lleva a otra ruta
         },
         (error) => {
           console.log('error:', error);
         }
       );
 
-    }else {
-      alert('Falta completar el formulario');
+    } else {
+      if (!this.selectedFile) {
+          this.imagenError = 'Debes seleccionar una imagen';
+      }
+      if (!this.form.valid) {
+          alert('Falta completar el formulario');
+      }
     }
+    // else {
+    //   alert('Falta completar el formulario');
+    // }
   }
-
+  // Obtener datos de vendedores
   ngOnInit(): void {
     this.getDataService.getVendedores().subscribe(data => {
       this.venderdores = data;

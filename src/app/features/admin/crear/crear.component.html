@@ -3,7 +3,7 @@
 
     <a [routerLink]="'/admin'" class="boton boton-verde">Volver</a>
 
-    <form class="formulario" [formGroup]="form" (ngSubmit)="enviarForm()">
+    <form class="formulario" [formGroup]="form" (ngSubmit)="enviarForm()" enctype="multipart/form-data">
         <fieldset>
             <legend>Información General</legend>
 
@@ -17,7 +17,8 @@
 
 
             <label for="imagen">Imagen:</label>
-            <input type="file" id="imagen" accept="image/jpeg, image/png, image/webp">
+            <input type="file" id="imagen" accept="image/jpeg, image/png, image/webp" name="imagen" (change)="onFileSelected($event)">
+            <span *ngIf="imagenError">{{ imagenError }}</span>
 
             <label for="descripcion">Descripción:</label>
             <textarea id="descripcion" name="descripcion" formControlName="descripcion" placeholder="Descripción de la Propiedad"></textarea>
