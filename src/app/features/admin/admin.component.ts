@@ -16,5 +16,6 @@ export class AdminComponent implements OnInit{
     this.getDataService.getData().subscribe(data => {
       this.datos = data;
     });
+   
   }
 }

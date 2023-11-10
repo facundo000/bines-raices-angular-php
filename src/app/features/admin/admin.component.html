@@ -18,11 +18,16 @@
             <tr>
                 <td >{{dato.id}}</td>
                 <td>{{dato.titulo}}</td>
-                <td><img src="../../../assets/img/{{dato.imagen}}" alt="imagen {{dato.titulo}}" class="imagen-tabla"></td>
+                <td>
+                    <img *ngIf="dato.imagen; else noImagen" src="http://localhost:3031/imagenes/{{dato.imagen}}" alt="imagen {{dato.titulo}}" class="imagen-tabla">
+                    <ng-template #noImagen>
+                        <img src="../../../assets/img/no-hay-foto.jpg" alt="Imagen no disponible" class="imagen-tabla">
+                    </ng-template>
+                </td>
                 <td>${{dato.precio}}</td>
                 <td>
                     <a href="" class="boton boton-rojo">Eliminar</a>
-                    <a href="" class="boton boton-amarillo">Actualizar</a>
+                    <a [routerLink]="['actualizar', dato.id]"  class="boton boton-amarillo">Actualizar</a>
                 </td>
             </tr>
         </tbody>
