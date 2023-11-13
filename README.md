@@ -1,10 +1,10 @@
 # Bienes Raices Angular-PHP
 
-## Inicio
+## /inicio
 ![imagen](./src/assets/img/md/BR-inicio.png)
-## Anuncios
+## /anuncios
 ![imagen](./src/assets/img/md/BR-nosotros.png)
-## Admin
+## /admin
 ![imagen](./src/assets/img/md/BR-admin.png)
 
 Es un proyecto realizado en un curso, donde le añadí complegidad y funcionalidades que no estaban en el curso.

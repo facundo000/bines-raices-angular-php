@@ -8,11 +8,12 @@ import { GetDataService } from 'src/app/core/services/getData/get-data.service';
 interface Propiedad {
   titulo: string;
   precio: number;
+  imagen: string;
   descripcion: string;
   habitaciones: number;
   wc: number;
   estacionamiento: number;
-  vendedores: number;
+  vendedores_id: number;
 }
 
 @Component({
@@ -24,6 +25,7 @@ export class ActualizarComponent implements OnInit {
   form: FormGroup;
   descripcionLength = 0;
   venderdores: any;
+  imagenUrl: string | null = null;
   selectedFile: File | any;
   imagenError: string | null = null;
   id: string | any;
@@ -86,10 +88,9 @@ export class ActualizarComponent implements OnInit {
       formData.append('wc', this.form.get('wc')?.value);
       formData.append('estacionamiento', this.form.get('estacionamiento')?.value);
       formData.append('vendedores', this.form.get('vendedores')?.value);
-      
-      formData.append('imagen', this.selectedFile);
+      // formData.append('imagen', this.selectedFile);
 
-      this.http.post('http://localhost:3030/database.php', formData, {responseType: 'text'})
+      this.http.put('http://localhost:3030/updateDatabase.php', formData, {responseType: 'text'})
       .subscribe(
         (response) => {
           console.log('éxito:', response);
@@ -102,9 +103,9 @@ export class ActualizarComponent implements OnInit {
       );
 
     } else {
-      if (!this.selectedFile) {
-          this.imagenError = 'Debes seleccionar una imagen';
-      }
+      // if (!this.selectedFile) {
+      //     this.imagenError = 'Debes seleccionar una imagen';
+      // }
       if (!this.form.valid) {
           alert('Falta completar el formulario');
       }
@@ -117,12 +118,20 @@ export class ActualizarComponent implements OnInit {
     });
 
     this.id = this.route.snapshot.paramMap.get('id');
-    console.log(this.id);
+    console.log('id: ' + this.id);
 
     this.http.get(`http://localhost:3031/getData.php?id=${this.id}`).subscribe(
       (response) => {
+        
         console.log(response);
         const propiedad = response as Propiedad;
+
+        if(propiedad.imagen) {
+            this.imagenUrl = 'http://localhost:3031/imagenes/' + propiedad.imagen;
+            console.log('imagen/' + propiedad.imagen);
+        } else {
+          this.imagenUrl = '../../../../assets/img/no-hay-foto.jpg';
+        }
         this.form.patchValue({
           'titulo': propiedad.titulo,
           'precio': propiedad.precio,
@@ -130,7 +139,8 @@ export class ActualizarComponent implements OnInit {
           'habitaciones': propiedad.habitaciones,
           'wc': propiedad.wc,
           'estacionamiento': propiedad.estacionamiento,
-          'vendedores': propiedad.vendedores
+          'vendedores': propiedad.vendedores_id
+          
         });
       },
       (error) => {

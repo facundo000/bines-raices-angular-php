@@ -24,6 +24,10 @@ a {
         text-transform: uppercase;
         display: block;
     }
+
+    td img {
+        height: 20rem;
+    }
     input:not([type="submit"]), 
     textarea,
     select {

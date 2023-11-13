@@ -18,7 +18,14 @@
 
             <label for="imagen">Imagen:</label>
             <input type="file" id="imagen" accept="image/jpeg, image/png, image/webp" name="imagen" (change)="onFileSelected($event)">
+            <td>
+                <img *ngIf="imagenUrl !== '../../../../assets/img/no-hay-foto.jpg'; else noImagen" [src]="imagenUrl" alt="Imagen de la propiedad">
+                <ng-template #noImagen>
+                    <img src="../../../../assets/img/no-hay-foto.jpg" alt="Imagen no cargada" class="imagen-tabla">
+                </ng-template>
+            </td>
             <span *ngIf="imagenError">{{ imagenError }}</span>
+            
 
             <label for="descripcion">Descripción:</label>
             <textarea id="descripcion" name="descripcion" formControlName="descripcion" placeholder="Descripción de la Propiedad"></textarea>
