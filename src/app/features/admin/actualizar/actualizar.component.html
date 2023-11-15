@@ -3,7 +3,7 @@
 
     <a [routerLink]="'/admin'" class="boton boton-verde">Volver</a>
 
-    <form class="formulario" [formGroup]="form" (ngSubmit)="enviarForm()" enctype="multipart/form-data">
+    <form class="formulario" [formGroup]="form" (ngSubmit)="enviarForm()"  enctype="multipart/form-data">
         <fieldset>
             <legend>Información General</legend>
 
@@ -60,7 +60,7 @@
 
             <select name="vendedores" id="vendedores_id" formControlName="vendedores">
                 <option value="">-- Seleccione --</option>
-                <option *ngFor="let vendedor of venderdores" [value]="vendedor.id">{{vendedor.nombre}} {{vendedor.apellido}} </option>
+                <option *ngFor="let vendedor of vendedores" [value]="vendedor.id">{{vendedor.nombre}} {{vendedor.apellido}} </option>
             </select>
             <span *ngIf="form.get('vendedores')?.errors?.['required']">Elige un vendedor</span>
 

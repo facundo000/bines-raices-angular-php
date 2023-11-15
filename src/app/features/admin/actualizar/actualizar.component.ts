@@ -3,8 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { GetDataService } from 'src/app/core/services/getData/get-data.service';
-//  NO SE MUESTRA PARA LA ELECCION EL "VENDEDODR"
-// TENGO QUE MOSTRAR LA IMAGEN
+
 interface Propiedad {
   titulo: string;
   precio: number;
@@ -24,11 +23,11 @@ interface Propiedad {
 export class ActualizarComponent implements OnInit {
   form: FormGroup;
   descripcionLength = 0;
-  venderdores: any;
+  id: string | any;
+  vendedores: any;
   imagenUrl: string | null = null;
   selectedFile: File | any;
   imagenError: string | null = null;
-  id: string | any;
 
   constructor(private http: HttpClient, private getDataService: GetDataService, private router: Router, private route: ActivatedRoute) {
     this.form = new FormGroup({
@@ -75,26 +74,25 @@ export class ActualizarComponent implements OnInit {
       this.imagenError = 'Debes seleccionar una imagen';
       this.selectedFile = null;
     }
-    
   }
-
   enviarForm() {
-    if(this.form.valid && this.selectedFile) {
-      const formData = new FormData();
-      formData.append('titulo', this.form.get('titulo')?.value);
-      formData.append('precio', this.form.get('precio')?.value);
-      formData.append('descripcion', this.form.get('descripcion')?.value);
-      formData.append('habitaciones', this.form.get('habitaciones')?.value);
-      formData.append('wc', this.form.get('wc')?.value);
-      formData.append('estacionamiento', this.form.get('estacionamiento')?.value);
-      formData.append('vendedores', this.form.get('vendedores')?.value);
-      // formData.append('imagen', this.selectedFile);
-
-      this.http.put('http://localhost:3030/updateDatabase.php', formData, {responseType: 'text'})
+    if(this.form.valid) {
+      let formData = new FormData();
+        formData.append('titulo', this.form.get('titulo')?.value ?? '');
+        formData.append('precio', this.form.get('precio')?.value ? this.form.get('precio')?.value.toString() : '');
+        formData.append('descripcion', this.form.get('descripcion')?.value ?? '');
+        formData.append('habitaciones', this.form.get('habitaciones')?.value ? this.form.get('habitaciones')?.value.toString() : '');
+        formData.append('wc', this.form.get('wc')?.value ? this.form.get('wc')?.value.toString() : '');
+        formData.append('estacionamiento', this.form.get('estacionamiento')?.value ? this.form.get('estacionamiento')?.value.toString() : '');
+        formData.append('vendedores', this.form.get('vendedores')?.value ? this.form.get('vendedores')?.value.toString() : '');
+        formData.append('id', this.id ? this.id.toString() : '');
+        
+        formData.append('imagen', this.selectedFile);
+      this.http.post('http://localhost:3030/updateDatabase.php', formData, {responseType: 'text'})
       .subscribe(
         (response) => {
           console.log('éxito:', response);
-          alert('Formulario enviado con éxito!!'); // muestra un mensaje de éxito
+          alert('Formulario actualizado con éxito!!'); // muestra un mensaje de éxito
           this.router.navigate(['/admin']); // Me lleva a otra ruta
         },
         (error) => {
@@ -114,21 +112,21 @@ export class ActualizarComponent implements OnInit {
   // Obtener datos de vendedores
   ngOnInit(): void {
     this.getDataService.getVendedores().subscribe(data => {
-      this.venderdores = data;
+      this.vendedores = data;
     });
 
     this.id = this.route.snapshot.paramMap.get('id');
-    console.log('id: ' + this.id);
+    // console.log('id: ' + this.id);
 
     this.http.get(`http://localhost:3031/getData.php?id=${this.id}`).subscribe(
       (response) => {
         
-        console.log(response);
+        // console.log(response);
         const propiedad = response as Propiedad;
 
         if(propiedad.imagen) {
             this.imagenUrl = 'http://localhost:3031/imagenes/' + propiedad.imagen;
-            console.log('imagen/' + propiedad.imagen);
+            // console.log('imagen/' + propiedad.imagen);
         } else {
           this.imagenUrl = '../../../../assets/img/no-hay-foto.jpg';
         }
