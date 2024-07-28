@@ -8,6 +8,7 @@ import { AnuncioComponent } from './features/anuncio/anuncio.component';
 import { BlogComponent } from './features/blog/blog.component';
 import { ContactoComponent } from './features/contacto/contacto.component';
 import { EntradaComponent } from './features/entrada/entrada.component';
+import { AdminComponent } from './features/admin/admin.component';
 
 const routes: Routes = [
   { path: 'nosotros', component: NosotrosComponent },

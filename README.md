@@ -19,3 +19,13 @@ En el front se utilizó:
 En el Back se utilizó:
 * PHP  8.1.18
 * Inserciones al servidor
+
+## ruta
+```
+http://localhost:4200/admin
+```
+##
+componente actualizar:
+- falta cargar la imagen
+- Cargar los vendedores
+- Enviar formulario

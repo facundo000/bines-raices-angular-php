@@ -2,15 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+
 import { GetDataService } from 'src/app/core/services/getData/get-data.service';
+import { environment } from 'src/environmet';
+import { BienesRaicesBDService } from 'src/app/core/services/bienes-raices-bd.service';
 
 interface Propiedad {
   titulo: string;
-  precio: number;
-  imagen: string;
+  precio: string;
+  imagen: string[];
   descripcion: string;
   habitaciones: number;
-  wc: number;
+  banio: number;
   estacionamiento: number;
   vendedores_id: number;
 }
@@ -23,22 +26,32 @@ interface Propiedad {
 export class ActualizarComponent implements OnInit {
   form: FormGroup;
   descripcionLength = 0;
-  id: string | any;
-  vendedores: any;
+  datos: any;
+  id: string | null = '';
+  vendedores: string | any;
   imagenUrl: string | null = null;
   selectedFile: File | any;
   imagenError: string | null = null;
 
-  constructor(private http: HttpClient, private getDataService: GetDataService, private router: Router, private route: ActivatedRoute) {
-    this.form = new FormGroup({
-      'titulo': new FormControl('', Validators.required),
-      'precio': new FormControl('', [Validators.required, Validators.minLength(1)]),
-      'descripcion': new FormControl('', [Validators.required, Validators.minLength(50)]),
-      'habitaciones': new FormControl('', [Validators.required, Validators.min(1)]),
-      'wc': new FormControl('', [Validators.required, Validators.min(1)]),
-      'estacionamiento': new FormControl('', [Validators.required, Validators.min(1)]),
-      'vendedores': new FormControl('', Validators.required)
-    });
+  private apiUrl = environment.apiUrl;
+  private urlImg = environment.urlImg;
+  
+
+  constructor(
+    private httpClient: HttpClient ,
+     private router: Router, 
+     private route: ActivatedRoute,
+     private bienesRaicesBDService: BienesRaicesBDService
+    ) {
+      this.form = new FormGroup({
+        'titulo': new FormControl('', Validators.required),
+        'precio': new FormControl('', [Validators.required, Validators.minLength(1)]),
+        'descripcion': new FormControl('', [Validators.required, Validators.minLength(50)]),
+        'habitaciones': new FormControl('', [Validators.required, Validators.min(1)]),
+        'wc': new FormControl('', [Validators.required, Validators.min(1)]),
+        'estacionamiento': new FormControl('', [Validators.required, Validators.min(1)]),
+        'vendedores': new FormControl('', Validators.required)
+      });
 
     // Contador de carácteres
     this.form.get('descripcion')?.valueChanges.subscribe(value => {
@@ -54,7 +67,6 @@ export class ActualizarComponent implements OnInit {
 
     });
   }
-
 
   // Restricciones para imagenes
   onFileSelected(event: Event) {
@@ -78,6 +90,7 @@ export class ActualizarComponent implements OnInit {
   enviarForm() {
     if(this.form.valid) {
       let formData = new FormData();
+        //validaciones 
         formData.append('titulo', this.form.get('titulo')?.value ?? '');
         formData.append('precio', this.form.get('precio')?.value ? this.form.get('precio')?.value.toString() : '');
         formData.append('descripcion', this.form.get('descripcion')?.value ?? '');
@@ -88,7 +101,8 @@ export class ActualizarComponent implements OnInit {
         formData.append('id', this.id ? this.id.toString() : '');
         
         formData.append('imagen', this.selectedFile);
-      this.http.post('http://localhost:3030/updateDatabase.php', formData, {responseType: 'text'})
+
+      this.httpClient.post(`${this.apiUrl}/updateDatabase.php`, formData, {responseType: 'text'})
       .subscribe(
         (response) => {
           console.log('éxito:', response);
@@ -101,9 +115,6 @@ export class ActualizarComponent implements OnInit {
       );
 
     } else {
-      // if (!this.selectedFile) {
-      //     this.imagenError = 'Debes seleccionar una imagen';
-      // }
       if (!this.form.valid) {
           alert('Falta completar el formulario');
       }
@@ -111,39 +122,43 @@ export class ActualizarComponent implements OnInit {
   }
   // Obtener datos de vendedores
   ngOnInit(): void {
-    this.getDataService.getVendedores().subscribe(data => {
+    this.bienesRaicesBDService.getDataVendedores().subscribe((data: string) => {
       this.vendedores = data;
-    });
+      console.log(this.vendedores);
+    })
 
     this.id = this.route.snapshot.paramMap.get('id');
-    // console.log('id: ' + this.id);
+    console.log('id: ' + this.id);
+    
+    if (this.id) {
+      this.httpClient.get<Propiedad>(`${this.apiUrl}/${this.id}`).subscribe(
+        (response) => {
+          const propiedad = response;
+          console.log(propiedad);
+          this.form.patchValue({
+            'titulo': propiedad.titulo,
+            'precio': propiedad.precio,
+            'descripcion': propiedad.descripcion,
+            'habitaciones': propiedad.habitaciones,
+            'wc': propiedad.banio,
+            'estacionamiento': propiedad.estacionamiento,
+            'vendedores': propiedad.vendedores_id
+          });
 
-    this.http.get(`http://localhost:3031/getData.php?id=${this.id}`).subscribe(
-      (response) => {
-        
-        // console.log(response);
-        const propiedad = response as Propiedad;
-
-        if(propiedad.imagen) {
-            this.imagenUrl = 'http://localhost:3031/imagenes/' + propiedad.imagen;
-            // console.log('imagen/' + propiedad.imagen);
-        } else {
+          if(propiedad.imagen && propiedad.imagen.length > 0) {
+            this.imagenUrl = `${this.urlImg}${propiedad.imagen[0]}`;
+            console.log(this.imagenUrl);
+          } else {
           this.imagenUrl = '../../../../assets/img/no-hay-foto.jpg';
+          }
+        },
+        (error) => {
+          console.error('Error al obtener los datos de la propiedad:', error);
+          this.router.navigate(['/admin']);
         }
-        this.form.patchValue({
-          'titulo': propiedad.titulo,
-          'precio': propiedad.precio,
-          'descripcion': propiedad.descripcion,
-          'habitaciones': propiedad.habitaciones,
-          'wc': propiedad.wc,
-          'estacionamiento': propiedad.estacionamiento,
-          'vendedores': propiedad.vendedores_id
-          
-        });
-      },
-      (error) => {
-        this.router.navigate(['/admin']);
-      }
-    )
+      );
+      
+    }
+
   }
 }

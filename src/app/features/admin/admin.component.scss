@@ -21,3 +21,8 @@ table.propiedades {
         width: 10rem;
     }
 }
+
+td {
+    border-bottom: 1px solid var(--gris);
+    padding: 2rem;
+}

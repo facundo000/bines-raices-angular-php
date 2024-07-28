@@ -18,6 +18,7 @@ import { FooterComponent } from './core/shared/footer/footer.component';
 import { AnuncioComponent } from './features/anuncio/anuncio.component';
 import { EntradaComponent } from './features/entrada/entrada.component';
 import { CrearComponent } from './features/admin/crear/crear.component';
+import { AdminsModule } from './features/admin/admins.module';
 
 @NgModule({
   declarations: [

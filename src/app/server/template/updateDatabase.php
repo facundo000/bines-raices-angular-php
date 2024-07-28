@@ -30,9 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     var_dump($_POST);
     echo '</pre>';
 
-    // echo '<pre>';
-    // var_dump($_FILES);
-    // echo '</pre>';
+    echo '<pre>';
+    var_dump($_FILES);
+    echo '</pre>';
 
     // Validar ID
     $id = $_POST['id'];
@@ -55,7 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $vendedores_id = mysqli_real_escape_string( $db, $_POST['vendedores']);
 
     
-    $carpetaImagenes = 'template/imagenes/';
+    $carpetaImagenes = 'C:/apache/htdocs/bienesraices_angular/src/app/server/template/imagenes/';
+    
 
     // CREAR CARPETA
     if(!is_dir($carpetaImagenes)) {
@@ -88,7 +89,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // $resultado = true;
 
     if($resultado) {
-        // echo "Insertado Correctamente";
         echo json_encode(["message" => "Insertado Correctamente"]);
     } else {
         echo json_encode(["message" => "No se inserto a la base de datos"]);
