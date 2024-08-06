@@ -6,6 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { GetDataService } from 'src/app/core/services/getData/get-data.service';
 import { environment } from 'src/environmet';
 import { BienesRaicesBDService } from 'src/app/core/services/bienes-raices-bd.service';
+import { Propiedades } from '../../../core/services/getData/propiedades.interface';
+
 
 interface Propiedad {
   titulo: string;
@@ -87,27 +89,78 @@ export class ActualizarComponent implements OnInit {
       this.selectedFile = null;
     }
   }
-  enviarForm() {
-    if(this.form.valid) {
-      let formData = new FormData();
-        //validaciones 
-        formData.append('titulo', this.form.get('titulo')?.value ?? '');
-        formData.append('precio', this.form.get('precio')?.value ? this.form.get('precio')?.value.toString() : '');
-        formData.append('descripcion', this.form.get('descripcion')?.value ?? '');
-        formData.append('habitaciones', this.form.get('habitaciones')?.value ? this.form.get('habitaciones')?.value.toString() : '');
-        formData.append('wc', this.form.get('wc')?.value ? this.form.get('wc')?.value.toString() : '');
-        formData.append('estacionamiento', this.form.get('estacionamiento')?.value ? this.form.get('estacionamiento')?.value.toString() : '');
-        formData.append('vendedores', this.form.get('vendedores')?.value ? this.form.get('vendedores')?.value.toString() : '');
-        formData.append('id', this.id ? this.id.toString() : '');
+  // enviarForm(): void {
+  //   if(this.form.valid) {
+  //     let formData = new FormData();
+      
+  //       //validaciones 
+  //       // formData.append('titulo', this.form.get('titulo')?.value ?? '');        
+  //       // formData.append('precio', this.form.get('precio')?.value ? this.form.get('precio')?.value.toString() : '');
+  //       // formData.append('descripcion', this.form.get('descripcion')?.value ?? '');
+  //       // formData.append('habitaciones', this.form.get('habitaciones')?.value ? this.form.get('habitaciones')?.value.toString() : '');
+  //       // formData.append('wc', this.form.get('wc')?.value ? this.form.get('wc')?.value.toString() : '');
+  //       // formData.append('estacionamiento', this.form.get('estacionamiento')?.value ? this.form.get('estacionamiento')?.value.toString() : '');
+  //       // formData.append('vendedores', this.form.get('vendedores')?.value ? this.form.get('vendedores')?.value.toString() : '');
+  //       // formData.append('id', this.id ? this.id.toString() : '');
         
-        formData.append('imagen', this.selectedFile);
+  //       // formData.append('imagen', this.selectedFile);
 
-      this.httpClient.post(`${this.apiUrl}/updateDatabase.php`, formData, {responseType: 'text'})
-      .subscribe(
+  //       const titulo = this.form.get('titulo')?.value ?? '';
+  //       const precio = this.form.get('precio')?.value ? Number(this.form.get('precio')?.value) : 0;
+  //       const descripcion = this.form.get('descripcion')?.value ?? '';
+  //       const habitaciones = this.form.get('habitaciones')?.value ? Number(this.form.get('habitaciones')?.value) : 0;
+  //       const wc = this.form.get('wc')?.value ? Number(this.form.get('wc')?.value) : 0;
+  //       const estacionamiento = this.form.get('estacionamiento')?.value ? Number(this.form.get('estacionamiento')?.value) : 0;
+  //       const vendedores = this.form.get('vendedores')?.value ?? '';
+        
+  //       formData.append('titulo', titulo.toString());
+  //       console.log(titulo);
+  //       formData.append('precio', precio.toString());
+  //       formData.append('descripcion', descripcion.toString());
+  //       formData.append('habitaciones', habitaciones.toString());
+  //       formData.append('wc', wc.toString());
+  //       formData.append('estacionamiento', estacionamiento.toString());
+  //       formData.append('vendedores', vendedores.toString());
+  //       formData.append('id', this.id ? this.id.toString() : '');
+  //       formData.append('imagen', this.selectedFile);
+  //     // Agregar campos a formData
+
+  //     //Consulta que envía
+  //     // this.httpClient.post(`${this.apiUrl}`, formData, {responseType: 'text'})
+  //     this.bienesRaicesBDService.addPropiedades(Propiedades)
+  //     .subscribe(
+  //       (response) => {
+  //         console.log('éxito:', response);
+  //         alert('Formulario actualizado con éxito!!'); // muestra un mensaje de éxito
+  //         this.router.navigate(['/admin']); // Me lleva a otra ruta
+  //       },
+  //       (error) => {
+  //         console.log('error:', error);
+  //       }
+  //     );
+
+  //   } 
+  enviarForm(): void {
+    if(this.form.valid) {
+      const propiedades: Propiedades = {
+        id: this.form.get('id')?.value,
+        slug: this.form.get('slug')?.value,
+        titulo: this.form.get('titulo')?.value,
+        precio: this.form.get('precio')?.value,
+        descripcion: this.form.get('descripcion')?.value,
+        habitaciones: this.form.get('habitaciones')?.value,
+        banio: this.form.get('banio')?.value,
+        estacionamiento: this.form.get('estacionamiento')?.value,
+        imagem: this.form.get('imagen')?.value,
+        vendedorId: this.form.get('vendedores')?.value
+      };
+      // const url = `${this.apiUrl}/${this.id}`;
+
+      this.bienesRaicesBDService.updatePropiedades(propiedades, this.id).subscribe(
         (response) => {
           console.log('éxito:', response);
-          alert('Formulario actualizado con éxito!!'); // muestra un mensaje de éxito
-          this.router.navigate(['/admin']); // Me lleva a otra ruta
+          alert('Formulario actualizado con éxito!!'); 
+          this.router.navigate(['/admin']);
         },
         (error) => {
           console.log('error:', error);
