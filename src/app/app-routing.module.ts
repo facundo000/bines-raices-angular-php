@@ -9,6 +9,7 @@ import { BlogComponent } from './features/blog/blog.component';
 import { ContactoComponent } from './features/contacto/contacto.component';
 import { EntradaComponent } from './features/entrada/entrada.component';
 import { AdminComponent } from './features/admin/admin.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   { path: 'nosotros', component: NosotrosComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'entrada', component: EntradaComponent },
   { path: 'admin', loadChildren: () => import('./features/admin/admins.module').then(m => m.AdminsModule) },
   { path: 'contacto', component: ContactoComponent },
+  { path: 'acceder', component: LoginComponent },
   { path: '**', component: InicioComponent }
 ];
 

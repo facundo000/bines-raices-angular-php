@@ -17,15 +17,7 @@ En el front se utilizó:
 
 ## Back
 En el Back se utilizó:
-* PHP  8.1.18
-* Inserciones al servidor
-
-## ruta
+* Nestjs - v10.3.0
 ```
-http://localhost:4200/admin
+https://github.com/facundo000/backend-bienesRaices-nest
 ```
-##
-componente actualizar:
-- falta cargar la imagen
-- Cargar los vendedores
-- Enviar formulario

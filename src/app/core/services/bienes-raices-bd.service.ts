@@ -16,10 +16,6 @@ export class BienesRaicesBDService {
     return this.HttpClient.get('http://localhost:3000/api/v1/propiedades');
   }
 
-  getDataVendedores(): Observable<any> {
-    return this.HttpClient.get('http://localhost:3000/api/v1/vendedores');
-  }
-
   addPropiedades(propiedades: Propiedades): Observable<Propiedades> {
     return this.HttpClient.post<Propiedades>(this.apiUrl, propiedades);
   }

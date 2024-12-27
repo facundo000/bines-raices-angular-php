@@ -19,6 +19,7 @@ import { AnuncioComponent } from './features/anuncio/anuncio.component';
 import { EntradaComponent } from './features/entrada/entrada.component';
 import { CrearComponent } from './features/admin/crear/crear.component';
 import { AdminsModule } from './features/admin/admins.module';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { AdminsModule } from './features/admin/admins.module';
     ContactoComponent,
     AnuncioComponent,
     EntradaComponent,
-    CrearComponent
+    CrearComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

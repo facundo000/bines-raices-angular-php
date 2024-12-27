@@ -51,8 +51,7 @@ export class ActualizarComponent implements OnInit {
         'descripcion': new FormControl('', [Validators.required, Validators.minLength(50)]),
         'habitaciones': new FormControl('', [Validators.required, Validators.min(1)]),
         'wc': new FormControl('', [Validators.required, Validators.min(1)]),
-        'estacionamiento': new FormControl('', [Validators.required, Validators.min(1)]),
-        'vendedores': new FormControl('', Validators.required)
+        'estacionamiento': new FormControl('', [Validators.required, Validators.min(1)])
       });
 
     // Contador de carácteres
@@ -76,6 +75,9 @@ export class ActualizarComponent implements OnInit {
     if (fileInput.files) {
         this.selectedFile = fileInput.files[0];
 
+      //MODIFICAR RUTA DE SUBIDA DE IMAGENES
+
+      //http://localhost:3000/api/v1/files/propiedad
       // Verificar el tamañp del archivo
       const medida = 1000 * 1000; // = 1mb
       if(this.selectedFile.size > medida) {
@@ -89,57 +91,6 @@ export class ActualizarComponent implements OnInit {
       this.selectedFile = null;
     }
   }
-  // enviarForm(): void {
-  //   if(this.form.valid) {
-  //     let formData = new FormData();
-      
-  //       //validaciones 
-  //       // formData.append('titulo', this.form.get('titulo')?.value ?? '');        
-  //       // formData.append('precio', this.form.get('precio')?.value ? this.form.get('precio')?.value.toString() : '');
-  //       // formData.append('descripcion', this.form.get('descripcion')?.value ?? '');
-  //       // formData.append('habitaciones', this.form.get('habitaciones')?.value ? this.form.get('habitaciones')?.value.toString() : '');
-  //       // formData.append('wc', this.form.get('wc')?.value ? this.form.get('wc')?.value.toString() : '');
-  //       // formData.append('estacionamiento', this.form.get('estacionamiento')?.value ? this.form.get('estacionamiento')?.value.toString() : '');
-  //       // formData.append('vendedores', this.form.get('vendedores')?.value ? this.form.get('vendedores')?.value.toString() : '');
-  //       // formData.append('id', this.id ? this.id.toString() : '');
-        
-  //       // formData.append('imagen', this.selectedFile);
-
-  //       const titulo = this.form.get('titulo')?.value ?? '';
-  //       const precio = this.form.get('precio')?.value ? Number(this.form.get('precio')?.value) : 0;
-  //       const descripcion = this.form.get('descripcion')?.value ?? '';
-  //       const habitaciones = this.form.get('habitaciones')?.value ? Number(this.form.get('habitaciones')?.value) : 0;
-  //       const wc = this.form.get('wc')?.value ? Number(this.form.get('wc')?.value) : 0;
-  //       const estacionamiento = this.form.get('estacionamiento')?.value ? Number(this.form.get('estacionamiento')?.value) : 0;
-  //       const vendedores = this.form.get('vendedores')?.value ?? '';
-        
-  //       formData.append('titulo', titulo.toString());
-  //       console.log(titulo);
-  //       formData.append('precio', precio.toString());
-  //       formData.append('descripcion', descripcion.toString());
-  //       formData.append('habitaciones', habitaciones.toString());
-  //       formData.append('wc', wc.toString());
-  //       formData.append('estacionamiento', estacionamiento.toString());
-  //       formData.append('vendedores', vendedores.toString());
-  //       formData.append('id', this.id ? this.id.toString() : '');
-  //       formData.append('imagen', this.selectedFile);
-  //     // Agregar campos a formData
-
-  //     //Consulta que envía
-  //     // this.httpClient.post(`${this.apiUrl}`, formData, {responseType: 'text'})
-  //     this.bienesRaicesBDService.addPropiedades(Propiedades)
-  //     .subscribe(
-  //       (response) => {
-  //         console.log('éxito:', response);
-  //         alert('Formulario actualizado con éxito!!'); // muestra un mensaje de éxito
-  //         this.router.navigate(['/admin']); // Me lleva a otra ruta
-  //       },
-  //       (error) => {
-  //         console.log('error:', error);
-  //       }
-  //     );
-
-  //   } 
   enviarForm(): void {
     if(this.form.valid) {
       const propiedades: Propiedades = {
@@ -175,11 +126,6 @@ export class ActualizarComponent implements OnInit {
   }
   // Obtener datos de vendedores
   ngOnInit(): void {
-    this.bienesRaicesBDService.getDataVendedores().subscribe((data: string) => {
-      this.vendedores = data;
-      console.log(this.vendedores);
-    })
-
     this.id = this.route.snapshot.paramMap.get('id');
     console.log('id: ' + this.id);
     
@@ -199,7 +145,7 @@ export class ActualizarComponent implements OnInit {
           });
 
           if(propiedad.imagen && propiedad.imagen.length > 0) {
-            this.imagenUrl = `${this.urlImg}${propiedad.imagen[0]}`;
+            this.imagenUrl = `${this.urlImg}${propiedad.imagen}`;
             console.log(this.imagenUrl);
           } else {
           this.imagenUrl = '../../../../assets/img/no-hay-foto.jpg';

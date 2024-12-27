@@ -19,10 +19,11 @@
                 <td >{{dato.id}}</td>
                 <td>{{dato.titulo}}</td>
                 <td>
-                    <img *ngIf="dato.imagen && dato.imagen.length > 0; else noImagen" 
-                 [src]="'http://localhost:3000/api/v1/files/propiedad/' + dato.imagen[0].url" 
+                    <!-- <img *ngIf="dato.imagen && dato.imagen.length > 0; else noImagen" 
+                 [src]="'http://localhost:3000/api/v1/files/propiedad/' + dato.imagen.url" 
                  [alt]="'imagen ' + dato.titulo" 
-                 class="imagen-tabla">
+                 class="imagen-tabla"> -->
+                 <img *ngIf="dato.imagen && dato.imagen.url; else noImagen" [src]="'http://localhost:3000/api/v1/files/propiedad/' + dato.imagen.url" [alt]="'imagen ' + dato.titulo" class="imagen-tabla">
             <ng-template #noImagen>
                 <img src="./assets/img/no-hay-foto.jpg" alt="Imagen no disponible" class="imagen-tabla">
             </ng-template>
