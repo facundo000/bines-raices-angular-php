@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../core/services/auth/auth.service';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-login',
@@ -7,42 +10,23 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  loginForm: FormGroup;
-  errorMessage: string | null = null;
+  private fb = inject(FormBuilder);
+  private AuthService = inject(AuthService);
+  private router = inject(Router);
 
-  constructor(private fb: FormBuilder) {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
-    });
-  }
+  public myForm: FormGroup = this.fb.group({
+    email: ['jKus7@google.com', [Validators.required, Validators.email]],
+    password: ['Abc123456', [Validators.required, Validators.minLength(6)]]
+  })
 
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
+  login(){
+    const { email, password } = this.myForm.value
 
-      // Simulación del manejo de autenticación
-      this.simulateLogin(email, password)
-        .then(() => {
-          this.errorMessage = null;
-          alert('Login successful!');
-        })
-        .catch(err => {
-          this.errorMessage = err.message || 'Login failed. Please try again.';
-        });
-    } else {
-      this.errorMessage = 'Please fill in all required fields correctly.';
-    }
-  }
-
-  private simulateLogin(email: string, password: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      // Simula una API de autenticación
-      if (email === 'test@example.com' && password === 'password123') {
-        resolve();
-      } else {
-        reject({ message: 'Invalid email or password.' });
+    this.AuthService.login(email, password).subscribe({
+      next: () => this.router.navigate(['/home']),
+      error: (message) => {
+        Swal.fire( 'Error', message, 'error' );
       }
-    });
+    })
   }
 }

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DarkmodeService } from '../../services/dark-mode/darkmode.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -17,9 +18,19 @@ export class HeaderComponent {
   isVisible = false;
   isDarkMode = false;
 
+  isLoggedIn: boolean = false;
+
+  private authService = inject( AuthService );
+
   constructor(private router: Router, private darkmodeService: DarkmodeService) {}
 
   ngOnInit() {
+
+    this.authService.isLoggedIn.subscribe(status => {
+      this.isLoggedIn = status;
+    });
+    
+
     this.router.events.subscribe((event) => {
       // Resetea todos los estilos a false
       for (let style in this.pageStyles) {
@@ -38,6 +49,10 @@ export class HeaderComponent {
       }
     });
     
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   //menu responsive

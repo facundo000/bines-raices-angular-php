@@ -5,10 +5,13 @@ import { ActualizarComponent } from './actualizar/actualizar.component';
 import { AdminComponent } from './admin.component';
 
 const routes: Routes = [
-  { path: '', component: AdminComponent },
-  { path: 'crear', component: CrearComponent },
-  { path: 'actualizar/:id', component: ActualizarComponent},
-  { path: '**', component: AdminComponent }
+  { path: '', component: AdminComponent,
+    children: [
+      { path: 'crear', component: CrearComponent },
+      { path: 'actualizar/:id', component: ActualizarComponent},
+      { path: '**', redirectTo: 'admin' }
+    ]
+   },  
 ];
 
 @NgModule({

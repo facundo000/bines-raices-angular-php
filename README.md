@@ -21,3 +21,16 @@ En el Back se utilizó:
 ```
 https://github.com/facundo000/backend-bienesRaices-nest
 ```
+## ruta
+```
+http://localhost:4200/admin
+```
+## Refactorización
+
+ ~~1. Que el usuario pase por el login (usuario ya definido) ~~
+
+ ~~ 2. Que cambie el login por Dasboard (para no redirijisrse al login)  ~~
+
+~~3. Modificar el acceso a las rutas~~
+
+4. Reacer el crud del dashboard (curso CRUD Heroes)
