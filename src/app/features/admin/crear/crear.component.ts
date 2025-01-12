@@ -9,7 +9,7 @@ import { GetDataService } from 'src/app/core/services/getData/get-data.service';
   templateUrl: './crear.component.html',
   styleUrls: ['./crear.component.scss']
 })
-export class CrearComponent implements OnInit {
+export class CrearComponent {
   // form: FormGroup;
   descripcionLength = 0;
   venderdores: any;
@@ -65,7 +65,7 @@ export class CrearComponent implements OnInit {
     
   }
 
-  // enviarForm() {
+  // send() {
   //   if(this.form.valid && this.selectedFile) {
   //     const formData = new FormData();
   //     formData.append('titulo', this.form.get('titulo')?.value);
@@ -98,14 +98,9 @@ export class CrearComponent implements OnInit {
   //         alert('Falta completar el formulario');
   //     }
   //   }
-  //   // else {
-  //   //   alert('Falta completar el formulario');
-  //   // }
-  // }
-  // Obtener datos de vendedores
-  ngOnInit(): void {
-    // this.getDataService.getVendedores().subscribe(data => {
-    //   this.venderdores = data;
-    // });
-  }
+    // else {
+    //   alert('Falta completar el formulario');
+    // }}
+
+
 }

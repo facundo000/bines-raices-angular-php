@@ -30,7 +30,7 @@
                     <a [routerLink]="['contacto']">Contacto</a>
                     <a [routerLink]="['acceder']">Acceder</a> -->
                     <ul>
-                        <li *ngIf="isLoggedIn"><a routerLink="/admin">Dashboard</a></li>
+                        <li *ngIf="isLoggedIn"><a routerLink="/dashboard">Dashboard</a></li>
                         <li *ngIf="!isLoggedIn"><a routerLink="/acceder">Acceder</a></li>
                         <li *ngIf="isLoggedIn"><button (click)="logout()">Cerrar sesión</button></li>
                     </ul>

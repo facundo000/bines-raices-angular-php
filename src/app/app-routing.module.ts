@@ -11,6 +11,8 @@ import { EntradaComponent } from './features/entrada/entrada.component';
 import { AdminComponent } from './features/admin/admin.component';
 import { LoginComponent } from './login/login.component';
 import { publicGuard, privateGuard } from './core/services/guards/index';
+import { AdminsModule } from './features/admin/admins.module';
+import { CrearComponent } from './features/admin/crear/crear.component';
 
 const routes: Routes = [
   { path: 'home', component: InicioComponent },
@@ -20,9 +22,9 @@ const routes: Routes = [
   { path: 'blog', component: BlogComponent },
   { path: 'entrada', component: EntradaComponent },
   { 
-    path: 'admin',
+    path: 'dashboard',
     canActivate: [privateGuard],
-    loadChildren: () => import('./features/admin/admins.module').then(m => m.AdminsModule) 
+    loadChildren: () => import('./features/admin/admins.module').then(m => m.AdminsModule),
   },
   { path: 'contacto', component: ContactoComponent },
   { 

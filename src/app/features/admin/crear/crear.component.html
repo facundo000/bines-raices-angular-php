@@ -1,7 +1,7 @@
 <main class="contenedor seccion">
     <h1>Crear</h1>
 
-    <a [routerLink]="'/admin'" class="boton boton-verde">Volver</a>
+    <a [routerLink]="'/dashboard'" class="boton boton-verde">Volver</a>
 
     <form class="formulario"   enctype="multipart/form-data">
         <!-- <form class="formulario" [formGroup]="form" (ngSubmit)="enviarForm()" enctype="multipart/form-data"> -->
@@ -51,14 +51,6 @@
 
         <fieldset>
             <legend>Vendedor</legend>
-
-            <select name="vendedores" id="vendedores_id" formControlName="vendedores">
-                <option value="">-- Seleccione --</option>
-                <option *ngFor="let vendedor of venderdores" [value]="vendedor.id">{{vendedor.nombre}} {{vendedor.apellido}} </option>
-            </select>
-            <!-- <span *ngIf="form.get('vendedores')?.errors?.['required']">Elige un vendedor</span> -->
-            <span>Elige un vendedor</span>
-
         </fieldset>
         <input type="submit" value="Enviar" class="boton boton-verde">
     </form>
