@@ -3,8 +3,11 @@
 
     <a [routerLink]="'/dashboard'" class="boton boton-verde">Volver</a>
 
-    <form class="formulario"   enctype="multipart/form-data">
-        <!-- <form class="formulario" [formGroup]="form" (ngSubmit)="enviarForm()" enctype="multipart/form-data"> -->
+        <form 
+        class="formulario" 
+        [formGroup]="propiedadForm"
+         (ngSubmit)="onSubmit()"
+          enctype="multipart/form-data">
         <fieldset>
             <legend>Información General</legend>
 
@@ -21,10 +24,12 @@
             <input type="file" id="imagen" accept="image/jpeg, image/png, image/webp" name="imagen" (change)="onFileSelected($event)">
             <span *ngIf="imagenError">{{ imagenError }}</span>
 
+            <img *ngIf="previewUrl" [src]="previewUrl" alt="Vista previa de la imagen" style="max-width: 300px; margin-top: 10px;">
+
             <label for="descripcion">Descripción:</label>
             <textarea id="descripcion" name="descripcion" formControlName="descripcion" placeholder="Descripción de la Propiedad"></textarea>
             <span >La descripción es obligatoria y debe tener al menos 50 carácteres</span>
-            <p class="char-counter">{{ descripcionLength }}</p>
+            <!-- <p class="char-counter">{{ descripcionLength }}</p> -->
 
 
         </fieldset>
@@ -52,6 +57,11 @@
         <fieldset>
             <legend>Vendedor</legend>
         </fieldset>
-        <input type="submit" value="Enviar" class="boton boton-verde">
+        <input 
+        type="submit" 
+        [disabled]="propiedadForm.invalid" 
+        value="Enviar" 
+        class="boton boton-verde"
+        >
     </form>
 </main>
