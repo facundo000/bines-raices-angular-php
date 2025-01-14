@@ -11,14 +11,13 @@ import { Propiedades } from '../interfaces/propiedades.interfece';
 })
 export class CrearComponent {
   public propiedadForm = new FormGroup({
-    id: new FormControl<string>(''),
-    slug: new FormControl<string>(''),
     titulo: new FormControl<string>('', { nonNullable: true }),
-    precio: new FormControl<number>(0),
-    habitaciones: new FormControl<number>(0, { nonNullable: true }),
-    banio: new FormControl<number>(0, { nonNullable: true }),
-    estacionamiento: new FormControl(''),
-    imagen: new FormControl(''),
+    precio: new FormControl<number>(1),
+    descripcion: new FormControl<string>('', { nonNullable: true }),
+    habitaciones: new FormControl<number>(1, { nonNullable: true }),
+    banio: new FormControl<number>(1, { nonNullable: true }),
+    estacionamiento: new FormControl<number>(1, { nonNullable: true }),
+    imagen: new FormControl<string>(''),
   });
 
   previewUrl: SafeUrl | null = null;
@@ -35,30 +34,54 @@ export class CrearComponent {
   }
 
   onSubmit() {
-    if (this.propiedadForm.valid) {
-      const formData = this.propiedadForm.value;
-      console.log('Formulario completo a enviar:', {
-        formIsValid: this.propiedadForm.value,
-        formValues: formData,
-        imageUrl: formData.imagen
-      });
-
-      // Aquí podrías llamar al servicio para crear la propiedad
-      this.bienesRaicesBDService.createPropiedad(this.currentPropiedad)
+    if (this.propiedadForm.valid && this.selectedFile) {
+      this.bienesRaicesBDService.uploadPropiedadImage(this.selectedFile)
         .subscribe({
-          next: (response) => {
-            console.log('Propiedad creada exitosamente:', response);
-            // Aquí podrías agregar lógica adicional después de crear la propiedad
+          next: (response: any) => {
+            console.log('Imagen subida exitosamente:', response);
+            
+            // Actualizamos el formulario con la URL de la imagen
+            this.propiedadForm.patchValue({
+              imagen: response.secureUrl
+            });
+
+            // Creamos un objeto nuevo sin el id y slug
+            const nuevaPropiedad = {
+              titulo: this.propiedadForm.value.titulo!,
+              precio: Number(this.propiedadForm.value.precio),
+              descripcion: this.propiedadForm.value.descripcion!,
+              habitaciones: Number(this.propiedadForm.value.habitaciones),
+              banio: Number(this.propiedadForm.value.banio),
+              estacionamiento: Number(this.propiedadForm.value.estacionamiento),
+              imagen: [this.propiedadForm.value.imagen!]
+            };
+
+            // Ahora sí creamos la propiedad con los datos correctos
+            this.bienesRaicesBDService.createPropiedad(nuevaPropiedad)
+              .subscribe({
+                next: (response) => {
+                  console.log('Propiedad creada exitosamente:', response);
+                  // Aquí podrías agregar redirección o mensaje de éxito
+                },
+                error: (error) => {
+                  console.error('Error al crear la propiedad:', error);
+                  if (error.error?.message) {
+                    console.log('Errores de validación:', error.error.message);
+                  }
+                }
+              });
           },
           error: (error) => {
-            console.error('Error al crear la propiedad:', error);
+            console.error('Error al subir la imagen:', error);
+            this.imagenError = 'Error al subir la imagen';
           }
         });
     } else {
       console.log('Formulario inválido:', {
         formIsValid: this.propiedadForm.valid,
         formErrors: this.propiedadForm.errors,
-        formValues: this.propiedadForm.value
+        formValues: this.propiedadForm.value,
+        hasImage: !!this.selectedFile
       });
     }
   }
@@ -77,35 +100,14 @@ export class CrearComponent {
         return;
       }
 
-      // Crear preview de la imagen
+      // Solo creamos la preview, pero no subimos la imagen todavía
       this.previewUrl = this.sanitizer.bypassSecurityTrustUrl(
         URL.createObjectURL(this.selectedFile)
       );
-
-      // Subir la imagen usando el servicio
-      this.uploadImage();
     } else {
       this.imagenError = 'Debes seleccionar una imagen';
       this.selectedFile = null;
       this.previewUrl = null;
     }
-  }
-
-  private uploadImage() {
-    if (!this.selectedFile) return;
-
-    this.bienesRaicesBDService.uploadPropiedadImage(this.selectedFile)
-      .subscribe({
-        next: (response: any) => {
-          console.log('Respuesta del servidor al subir imagen:', response);
-          this.propiedadForm.patchValue({
-            imagen: response.url
-          });
-        },
-        error: (error) => {
-          console.error('Error al subir la imagen:', error);
-          this.imagenError = 'Error al subir la imagen';
-        }
-      });
   }
 }

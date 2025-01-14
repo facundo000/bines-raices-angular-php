@@ -1,11 +1,12 @@
 export interface Propiedades {
-    id:              string;
-    slug?:            string;
+    id?:              string;
     titulo:          string;
-    precio?:          string;
+    descripcion:     string;
+    precio:          number;
     habitaciones:    number;
     banio:           number;
-    estacionamiento?: number; 
-    imagen?: string[]
+    estacionamiento: number;
+    slug?:           string;
+    imagen?:         string[]    
 }
 
