@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-
 import { BienesRaicesBDService } from 'src/app/core/services/bienes-raices-bd.service';
 import { environment } from 'src/environmet';
 
@@ -14,7 +13,8 @@ export class AdminComponent implements OnInit{
 
   datos: any;
   imagenUrl: string | null = null;
-  urlImg = environment.urlImg;
+  url = environment.urlImg;
+
 
   constructor(private http: HttpClient, private bienesRaicesBDService: BienesRaicesBDService, private router: Router) {}
 
@@ -32,10 +32,39 @@ export class AdminComponent implements OnInit{
   // }
 
   ngOnInit(): void {
-    this.bienesRaicesBDService.getData().subscribe(data => {
-      this.datos = data;
-      console.log(this.datos);
-
+    this.bienesRaicesBDService.getData().subscribe({
+      next: (response) => {
+        this.datos = response.map((data: any) => ({
+          ...data,
+          imagen: data.imagen ? {
+            id: data.imagen.id,
+            url: this.processImageUrl(data.imagen.url)
+          } : {
+            id: null,
+            url: 'no-image.jpg' // O la imagen por defecto que quieras usar
+          }
+        }));
+      },
+      error: (error) => {
+        console.error('Error al obtener los datos:', error);
+      }
     });
+  }
+
+  private processImageUrl(url: string): string {
+    try {
+      if (!url) return 'no-image.jpg';
+      
+      // Si la URL contiene llaves y comillas, procesamos todo junto
+      if (url.includes('{')) {
+        return url.replace(/[{"}/]/g, ''); // Eliminamos llaves, comillas y barras
+      }
+      
+      // Si es una URL normal, la retornamos tal cual
+      return url;
+    } catch (error) {
+      console.error('Error procesando URL:', error);
+      return 'no-image.jpg';
+    }
   }
 }

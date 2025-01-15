@@ -40,22 +40,19 @@ export class CrearComponent {
           next: (response: any) => {
             console.log('Imagen subida exitosamente:', response);
             
-            // Actualizamos el formulario con la URL de la imagen
-            this.propiedadForm.patchValue({
-              imagen: response.secureUrl
-            });
-
-            // Creamos un objeto nuevo sin el id y slug
-            const nuevaPropiedad = {
+            const fileName = response.secureUrl;
+            
+            const nuevaPropiedad: Propiedades = {
               titulo: this.propiedadForm.value.titulo!,
               precio: Number(this.propiedadForm.value.precio),
               descripcion: this.propiedadForm.value.descripcion!,
               habitaciones: Number(this.propiedadForm.value.habitaciones),
               banio: Number(this.propiedadForm.value.banio),
               estacionamiento: Number(this.propiedadForm.value.estacionamiento),
-              imagen: [this.propiedadForm.value.imagen!]
+              imagen: [fileName]
             };
 
+            console.log('Nueva propiedad a crear:', nuevaPropiedad);
             // Ahora sí creamos la propiedad con los datos correctos
             this.bienesRaicesBDService.createPropiedad(nuevaPropiedad)
               .subscribe({

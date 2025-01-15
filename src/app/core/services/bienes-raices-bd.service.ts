@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Propiedades } from '../../features/admin/interfaces/propiedades.interfece';
 import { environment } from 'src/environmet';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -24,11 +25,22 @@ export class BienesRaicesBDService {
     const formData = new FormData();
     formData.append('file', file);
     const token = localStorage.getItem('token');
-
     const headers = new HttpHeaders().set('Authorization',`Bearer ${ token }`);
 
-  return this.http.post(`${this.baseUrl}/api/v1/files/propiedad`, formData, { headers });
-}
+    return this.http.post(`${this.baseUrl}/api/v1/files/propiedad`, formData, { headers })
+      .pipe(
+        map((response: any) => {
+          // Asegurarnos de que la URL esté en el formato correcto
+          const cleanUrl = response.secureUrl
+            .replace(`${this.baseUrl}/api/v1/files/propiedad`, '')
+            .replace(/[{}"\\]/g, '');
+          return {
+            ...response,
+            secureUrl: cleanUrl
+          };
+        })
+      );
+  }
   // Método para crear propiedad
   createPropiedad(propiedad: Propiedades): Observable<Propiedades> {
     const token = localStorage.getItem('token');

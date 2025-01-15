@@ -7,6 +7,6 @@ export interface Propiedades {
     banio:           number;
     estacionamiento: number;
     slug?:           string;
-    imagen?:         string[]    
+    imagen?:          string[];
 }
 
