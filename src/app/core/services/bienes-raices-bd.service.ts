@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Propiedades } from '../../features/admin/interfaces/propiedades.interfece';
 import { environment } from 'src/environmet';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,13 @@ export class BienesRaicesBDService {
 
   getData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/v1/propiedades`);
+  }
+
+  getDataByid(id: string): Observable<Propiedades|undefined>{
+    return this.http.get<Propiedades>(`${this.baseUrl}/api/v1/propiedades/${ id }`)
+    .pipe(
+      catchError( error => of(undefined) )
+    )
   }
 
   updatePropiedades(propiedades: Propiedades, id: string | null): Observable<Propiedades> {    

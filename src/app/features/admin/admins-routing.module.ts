@@ -5,7 +5,8 @@ import { AdminComponent } from './admin.component';
 
 const routes: Routes = [
   { path: '', component: AdminComponent, },
-  { path: 'crear', component: CrearComponent },  
+  { path: 'crear', component: CrearComponent },
+  { path: 'editar/:id', component: CrearComponent },
   { path: '**', redirectTo: '' }
 ];
 

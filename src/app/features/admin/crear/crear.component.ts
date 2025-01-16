@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { BienesRaicesBDService } from '../../../core/services/bienes-raices-bd.service';
 import { Propiedades } from '../interfaces/propiedades.interfece';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-crear',
@@ -13,7 +16,7 @@ export class CrearComponent {
   public propiedadForm = new FormGroup({
     titulo: new FormControl<string>('', { nonNullable: true }),
     precio: new FormControl<number>(1),
-    descripcion: new FormControl<string>('', { nonNullable: true }),
+    descripcion: new FormControl<string>('prueba auto', { nonNullable: true }),
     habitaciones: new FormControl<number>(1, { nonNullable: true }),
     banio: new FormControl<number>(1, { nonNullable: true }),
     estacionamiento: new FormControl<number>(1, { nonNullable: true }),
@@ -26,11 +29,40 @@ export class CrearComponent {
 
   constructor(
     private bienesRaicesBDService: BienesRaicesBDService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
     private sanitizer: DomSanitizer
   ) {}
 
   get currentPropiedad(): Propiedades {
-    return this.propiedadForm.value as Propiedades;
+    const proiedad = this.propiedadForm.value as Propiedades;
+    return proiedad;
+
+  }
+
+  ngOnInit(): void {
+    if(!this.router.url.includes('editar') ) return;
+
+    this.activatedRoute.params
+    .pipe(
+      switchMap( ({id}) => this.bienesRaicesBDService.getDataByid(id) )
+    ).subscribe( propiedad => {
+      if(!propiedad){
+        return this.router.navigateByUrl('/');
+      }
+      const propiedadConImagenAjustada = {
+        ...propiedad,
+        imagen: propiedad.imagen ? 
+          (Array.isArray(propiedad.imagen) ? propiedad.imagen[0] : 
+           typeof propiedad.imagen === 'object' ? propiedad.imagen : 
+           propiedad.imagen) : '',
+        banio: propiedad.banio || 1
+      };
+
+      console.log('Propiedad ajustada:', propiedadConImagenAjustada);
+      this.propiedadForm.reset(propiedadConImagenAjustada);
+      return;
+    })
   }
 
   onSubmit() {

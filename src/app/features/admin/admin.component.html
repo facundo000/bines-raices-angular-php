@@ -19,7 +19,6 @@
                 <td >1</td>
                 <td>{{dato.titulo}}</td>
                 <td>
-                 <!-- <img *ngIf="dato.imagen && dato.imagen.url; else noImagen" [src]="'http://localhost:3000/api/v1/files/propiedad/' + dato.imagen.url" [alt]="'imagen ' + dato.titulo" class="imagen-tabla"> -->
                  <img *ngIf="dato.imagen && dato.imagen.url; else noImagen" [src]= "url + dato.imagen.url" [alt]="'imagen ' + dato.titulo" class="imagen-tabla">
             <ng-template #noImagen>
                 <img src="./assets/img/no-hay-foto.jpg" alt="Imagen no disponible" class="imagen-tabla">
@@ -28,11 +27,8 @@
                 </td>
                 <td>{{dato.precio}}</td>
                 <td>
-                    <!-- <form (ngSubmit)="eliminarProp($event, dato.id)" class="w-100">
-                        <input type="submit" value="Eliminar" class="boton boton-rojo">
-                    </form> -->
                     <button class="boton boton-rojo">Eliminar</button>
-                    <a [routerLink]="['actualizar', dato.id]" class="boton boton-celeste">Editar</a>
+                    <a [routerLink]="['editar', dato.id]" class="boton boton-celeste">Editar</a>
                 </td>
             </tr>
         </tbody>

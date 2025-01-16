@@ -41,7 +41,7 @@ export class AdminComponent implements OnInit{
             url: this.processImageUrl(data.imagen.url)
           } : {
             id: null,
-            url: 'no-image.jpg' // O la imagen por defecto que quieras usar
+            url: ''
           }
         }));
       },
@@ -53,7 +53,7 @@ export class AdminComponent implements OnInit{
 
   private processImageUrl(url: string): string {
     try {
-      if (!url) return 'no-image.jpg';
+      // if (!url) return 'no-image.jpg';
       
       // Si la URL contiene llaves y comillas, procesamos todo junto
       if (url.includes('{')) {
