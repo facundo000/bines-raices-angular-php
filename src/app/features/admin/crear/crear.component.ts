@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BienesRaicesBDService } from '../../../core/services/bienes-raices-bd.service';
 import { Propiedades } from '../interfaces/propiedades.interfece';
 import { switchMap } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-crear',
@@ -20,12 +21,13 @@ export class CrearComponent {
     habitaciones: new FormControl<number>(1, { nonNullable: true }),
     banio: new FormControl<number>(1, { nonNullable: true }),
     estacionamiento: new FormControl<number>(1, { nonNullable: true }),
-    imagen: new FormControl<string>(''),
+    imagen: new FormControl<string[]>([]),
   });
 
   previewUrl: SafeUrl | null = null;
   selectedFile: File | null = null;
   imagenError: string | null = null;
+  private propiedadId: string | undefined;
 
   constructor(
     private bienesRaicesBDService: BienesRaicesBDService,
@@ -50,14 +52,26 @@ export class CrearComponent {
       if(!propiedad){
         return this.router.navigateByUrl('/');
       }
+      
+      this.propiedadId = propiedad.id;
+      
       const propiedadConImagenAjustada = {
         ...propiedad,
         imagen: propiedad.imagen ? 
-          (Array.isArray(propiedad.imagen) ? propiedad.imagen[0] : 
-           typeof propiedad.imagen === 'object' ? propiedad.imagen : 
-           propiedad.imagen) : '',
+          (Array.isArray(propiedad.imagen) ? propiedad.imagen : 
+           typeof propiedad.imagen === 'object' ? [propiedad.imagen] : 
+           [propiedad.imagen]) : [],
         banio: propiedad.banio || 1
       };
+
+      // Mostrar la imagen existente
+      if (propiedadConImagenAjustada.imagen.length > 0) {
+          const formateo = propiedadConImagenAjustada.imagen[0].replace(/[{"}/]/g, '');
+
+          this.previewUrl = this.sanitizer.bypassSecurityTrustUrl(
+            `${this.bienesRaicesBDService.baseUrl}/api/v1/files/propiedad/${formateo}`
+          );        
+      }
 
       console.log('Propiedad ajustada:', propiedadConImagenAjustada);
       this.propiedadForm.reset(propiedadConImagenAjustada);
@@ -66,52 +80,70 @@ export class CrearComponent {
   }
 
   onSubmit() {
-    if (this.propiedadForm.valid && this.selectedFile) {
-      this.bienesRaicesBDService.uploadPropiedadImage(this.selectedFile)
-        .subscribe({
-          next: (response: any) => {
-            console.log('Imagen subida exitosamente:', response);
-            
-            const fileName = response.secureUrl;
-            
-            const nuevaPropiedad: Propiedades = {
-              titulo: this.propiedadForm.value.titulo!,
-              precio: Number(this.propiedadForm.value.precio),
-              descripcion: this.propiedadForm.value.descripcion!,
-              habitaciones: Number(this.propiedadForm.value.habitaciones),
-              banio: Number(this.propiedadForm.value.banio),
-              estacionamiento: Number(this.propiedadForm.value.estacionamiento),
-              imagen: [fileName]
-            };
+    if (this.propiedadForm.valid) {
+      if (this.selectedFile) {
+        this.bienesRaicesBDService.uploadPropiedadImage(this.selectedFile)
+          .subscribe({
+            next: (response: any) => {
+              this.procesarFormulario([response.secureUrl]);
+            },
+            error: (error) => {
+              console.error('Error al subir la imagen:', error);
+              this.imagenError = 'Error al subir la imagen';
+            }
+          });
+      } else {
+        // Si no hay nueva imagen, usamos la imagen existente
+        const imagenActual = this.propiedadForm.get('imagen')?.value || [];
+        this.procesarFormulario(imagenActual);
+      }
+    }
+  }
 
-            console.log('Nueva propiedad a crear:', nuevaPropiedad);
-            // Ahora sí creamos la propiedad con los datos correctos
-            this.bienesRaicesBDService.createPropiedad(nuevaPropiedad)
-              .subscribe({
-                next: (response) => {
-                  console.log('Propiedad creada exitosamente:', response);
-                  // Aquí podrías agregar redirección o mensaje de éxito
-                },
-                error: (error) => {
-                  console.error('Error al crear la propiedad:', error);
-                  if (error.error?.message) {
-                    console.log('Errores de validación:', error.error.message);
-                  }
-                }
-              });
+  private procesarFormulario(imagenUrl: string[]) {
+    const propiedad: Propiedades = {
+      titulo: this.propiedadForm.value.titulo || '',
+      precio: Number(this.propiedadForm.value.precio),
+      habitaciones: Number(this.propiedadForm.value.habitaciones),
+      banio: Number(this.propiedadForm.value.banio),
+      estacionamiento: Number(this.propiedadForm.value.estacionamiento),
+      descripcion: this.propiedadForm.value.descripcion || '',
+      imagen: imagenUrl
+    };
+
+    if (this.router.url.includes('editar')) {
+      // Modo edición
+      if (!this.propiedadId) {
+        Swal.fire('Error', 'No se encontró el ID de la propiedad', 'error');
+        return;
+      }
+
+      this.bienesRaicesBDService.updatePropiedades(propiedad, this.propiedadId)
+        .subscribe({
+          next: (response) => {
+            console.log('Propiedad actualizada:', response);
+            Swal.fire('Éxito', 'Propiedad actualizada exitosamente', 'success');
+            this.router.navigate(['/dashboard']);
           },
           error: (error) => {
-            console.error('Error al subir la imagen:', error);
-            this.imagenError = 'Error al subir la imagen';
+            console.error('Error al actualizar la propiedad:', error);
+            Swal.fire('Error', 'Error al actualizar la propiedad', 'error');
           }
         });
     } else {
-      console.log('Formulario inválido:', {
-        formIsValid: this.propiedadForm.valid,
-        formErrors: this.propiedadForm.errors,
-        formValues: this.propiedadForm.value,
-        hasImage: !!this.selectedFile
-      });
+      // Modo creación
+      this.bienesRaicesBDService.createPropiedad(propiedad)
+        .subscribe({
+          next: (response) => {
+            console.log('Propiedad creada exitosamente:', response);
+            Swal.fire('Éxito', 'Propiedad creada exitosamente', 'success');
+            this.router.navigate(['/dashboard']);
+          },
+          error: (error) => {
+            console.error('Error al crear la propiedad:', error);
+            Swal.fire('Error', 'Error al crear la propiedad', 'error');
+          }
+        });
     }
   }
 

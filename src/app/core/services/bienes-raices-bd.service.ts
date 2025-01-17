@@ -9,7 +9,7 @@ import { catchError, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class BienesRaicesBDService {
-  private readonly baseUrl = environment.apiUrl;
+  public readonly baseUrl = environment.apiUrl;
   
   constructor(private http: HttpClient) { }
 
@@ -25,7 +25,10 @@ export class BienesRaicesBDService {
   }
 
   updatePropiedades(propiedades: Propiedades, id: string | null): Observable<Propiedades> {    
-    return this.http.patch<Propiedades>(`${this.baseUrl}/api/v1/propiedades/${id}` , propiedades);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization',`Bearer ${ token }`);
+
+    return this.http.patch<Propiedades>(`${this.baseUrl}/api/v1/propiedades/${id}` , propiedades, { headers });
   }
  // Método para subir imagen
   uploadPropiedadImage(file: File): Observable<any> {
@@ -37,13 +40,11 @@ export class BienesRaicesBDService {
     return this.http.post(`${this.baseUrl}/api/v1/files/propiedad`, formData, { headers })
       .pipe(
         map((response: any) => {
-          // Asegurarnos de que la URL esté en el formato correcto
-          const cleanUrl = response.secureUrl
-            .replace(`${this.baseUrl}/api/v1/files/propiedad`, '')
-            .replace(/[{}"\\]/g, '');
+          // Extraemos solo el nombre del archivo de la URL
+          const fileName = response.secureUrl.split('/').pop();
           return {
             ...response,
-            secureUrl: cleanUrl
+            secureUrl: `/${fileName}`
           };
         })
       );
