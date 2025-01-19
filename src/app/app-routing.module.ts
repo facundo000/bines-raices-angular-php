@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'home', component: InicioComponent },
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'anuncios', component: AnunciosComponent },
-  { path: 'anuncio', component: AnuncioComponent },
+  { path: 'anuncio/:id', component: AnuncioComponent },
   { path: 'blog', component: BlogComponent },
   { path: 'entrada', component: EntradaComponent },
   { 

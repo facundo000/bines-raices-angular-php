@@ -56,5 +56,16 @@ export class BienesRaicesBDService {
 
     return this.http.post<Propiedades>(`${this.baseUrl}/api/v1/propiedades`, propiedad, { headers });
   }
+
+  deletePropiedad(id: string): Observable<boolean> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization',`Bearer ${ token }`);
+
+    return this.http.delete<boolean>(`${this.baseUrl}/api/v1/propiedades/${id}`, { headers })
+    .pipe(
+      map( resp => true ),
+      catchError( err => of(false) )
+    );
+  }
 }
 

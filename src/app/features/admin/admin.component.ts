@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BienesRaicesBDService } from 'src/app/core/services/bienes-raices-bd.service';
 import { environment } from 'src/environmet';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements OnInit{
+export class AdminComponent implements OnInit {
 
   datos: any;
   imagenUrl: string | null = null;
@@ -18,20 +19,51 @@ export class AdminComponent implements OnInit{
 
   constructor(private http: HttpClient, private bienesRaicesBDService: BienesRaicesBDService, private router: Router) {}
 
-  // eliminarProp(id: string) {
-  //   if(window.confirm('¿Estás seguro de que quieres eliminar esta propiedad?')) {
-  //     // console.log('Eliminando propiedad con id: ' + id);
-  //     this.http.delete(`http://localhost:3031/deleteProp.php?id=${id}`).subscribe(() => {
-  //           console.log('Propiedad eliminada con id: ' + id);
-  //           // Aquí puedes agregar el código para actualizar la lista de propiedades después de eliminar
-  //           this.getDataService.getData().subscribe(data => {
-  //             this.datos = data;
-  //           });
-  //     });
-  //   }
-  // }
+  eliminarPropiedad(id: string) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podrás revertir esta acción",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.bienesRaicesBDService.deletePropiedad(id)
+          .subscribe({
+            next: (wasDeleted) => {
+              if (wasDeleted) {
+                Swal.fire(
+                  '¡Eliminado!',
+                  'La propiedad ha sido eliminada.',
+                  'success'
+                );
+                // Actualizar la lista de propiedades
+                this.cargarPropiedades();
+              } else {
+                Swal.fire(
+                  'Error',
+                  'No se pudo eliminar la propiedad',
+                  'error'
+                );
+              }
+            },
+            error: (error) => {
+              console.error('Error al eliminar:', error);
+              Swal.fire(
+                'Error',
+                'Ocurrió un error al eliminar la propiedad',
+                'error'
+              );
+            }
+          });
+      }
+    });
+  }
 
-  ngOnInit(): void {
+  private cargarPropiedades() {
     this.bienesRaicesBDService.getData().subscribe({
       next: (response) => {
         this.datos = response.map((data: any) => ({
@@ -49,6 +81,10 @@ export class AdminComponent implements OnInit{
         console.error('Error al obtener los datos:', error);
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.cargarPropiedades();
   }
 
   private processImageUrl(url: string): string {
