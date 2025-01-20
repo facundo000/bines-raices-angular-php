@@ -15,13 +15,14 @@
         </thead>
         
         <tbody *ngFor="let dato of datos; let i = index">
+
             <tr>
                 <td >{{i + 1}}</td>
                 <td>{{dato.titulo}}</td>
                 <td>
-                 <img *ngIf="dato.imagen && dato.imagen.url; else noImagen" [src]= "url + dato.imagen.url" [alt]="'imagen ' + dato.titulo" class="imagen-tabla">
+                 <img *ngIf="dato.imagen && dato.imagen.url; else noImagen" [src]= "url + dato.imagen.url" [alt]="'imagen ' + dato.titulo" class="imagen-tabla" loading="lazy">
                 <ng-template #noImagen>
-                    <img src="./assets/img/no-hay-foto.jpg" alt="Imagen no disponible" class="imagen-tabla">
+                    <img src="./assets/img/no-hay-foto.jpg" alt="Imagen no disponible" class="imagen-tabla" loading="lazy">
                 </ng-template>
 
                 </td>

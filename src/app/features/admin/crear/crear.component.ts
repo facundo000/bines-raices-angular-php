@@ -16,11 +16,11 @@ import Swal from 'sweetalert2';
 export class CrearComponent {
   public propiedadForm = new FormGroup({
     titulo: new FormControl<string>('', { nonNullable: true }),
-    precio: new FormControl<number>(1),
-    descripcion: new FormControl<string>('prueba auto', { nonNullable: true }),
-    habitaciones: new FormControl<number>(1, { nonNullable: true }),
-    banio: new FormControl<number>(1, { nonNullable: true }),
-    estacionamiento: new FormControl<number>(1, { nonNullable: true }),
+    precio: new FormControl<number>(0),
+    descripcion: new FormControl<string>('', { nonNullable: true }),
+    habitaciones: new FormControl<number>(0, { nonNullable: true }),
+    banio: new FormControl<number>(0, { nonNullable: true }),
+    estacionamiento: new FormControl<number>(0, { nonNullable: true }),
     imagen: new FormControl<string[]>([]),
   });
 
@@ -73,7 +73,7 @@ export class CrearComponent {
           );        
       }
 
-      console.log('Propiedad ajustada:', propiedadConImagenAjustada);
+      // console.log('Propiedad ajustada:', propiedadConImagenAjustada);
       this.propiedadForm.reset(propiedadConImagenAjustada);
       return;
     })

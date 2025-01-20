@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:3000',    
-    urlImg: 'http://localhost:3000/api/v1/files/propiedad/',
+    apiUrl: 'https://api-backend-bienesraices-nest.onrender.com',    
+    urlImg: 'https://api-backend-bienesraices-nest.onrender.com/api/v1/files/propiedad/',
   };
   

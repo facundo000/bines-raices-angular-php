@@ -26,3 +26,24 @@ td {
     border-bottom: 1px solid var(--gris);
     padding: 2rem;
 }
+
+@media (max-width: 570px /*tablet*/) {
+    table {
+        display: grid;
+        grid-template-columns: 29% 73%;
+    }
+    .imagen-tabla {
+        width: 100% !important;
+    }
+    thead tr {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    tbody tr {
+        display: flex;
+        flex-direction: column;
+    }
+}

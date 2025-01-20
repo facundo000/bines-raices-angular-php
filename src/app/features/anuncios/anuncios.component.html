@@ -3,10 +3,9 @@
     <div class="contenedor-anuncios">
         <div class="anuncio" *ngFor="let dato of datos">
             <picture>
-                <!-- <img src="../../assets/img/anuncio1.jpg" alt="anuncio" loading="lazy"> -->
-                <img *ngIf="dato.imagen && dato.imagen.url; else noImagen" [src]= "url + dato.imagen.url" [alt]="'imagen ' + dato.titulo" class="imagen-tabla">
+                <img *ngIf="dato.imagen && dato.imagen.url; else noImagen" [src]= "url + dato.imagen.url" [alt]="'imagen ' + dato.titulo" class="imagen-tabla" loading="lazy">
                 <ng-template #noImagen>
-                    <img src="./assets/img/no-hay-foto.jpg" alt="Imagen no disponible" class="imagen-tabla">
+                    <img src="./assets/img/no-hay-foto.jpg" alt="Imagen no disponible" class="imagen-tabla" loading="lazy">
                 </ng-template>
             </picture>
 

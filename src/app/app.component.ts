@@ -18,7 +18,7 @@ export class AppComponent {
 
   ngOnInit(){
     this.authService.checkAuthStatus().subscribe(privateGuard => {
-      console.log('Usuario autenticado', privateGuard);
+      // console.log('Usuario autenticado', privateGuard);
     })
   }
   // public finishedAuthCheck = computed<boolean>(() => {
