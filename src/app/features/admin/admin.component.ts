@@ -17,7 +17,7 @@ export class AdminComponent implements OnInit {
   url = environment.urlImg;
 
 
-  constructor(private http: HttpClient, private bienesRaicesBDService: BienesRaicesBDService, private router: Router) {}
+  constructor(private http: HttpClient, private bienesRaicesBDService: BienesRaicesBDService) {}
 
   eliminarPropiedad(id: string) {
     Swal.fire({
