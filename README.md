@@ -1,4 +1,4 @@
-# Bienes Raices Angular-PHP
+# Bienes Raices Angular-NestJS
 
 ## /inicio
 ![imagen](./src/assets/img/md/BR-inicio.png)
