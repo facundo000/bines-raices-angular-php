@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BienesRaicesBDService } from 'src/app/core/services/bienes-raices-bd.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { environment } from 'src/environmet';
 import Swal from 'sweetalert2';
 
@@ -15,14 +16,23 @@ export class AdminComponent implements OnInit {
   datos: any;
   imagenUrl: string | null = null;
   url = environment.urlImg;
+  isAdmin: boolean = false;
+  currentUser: any = null;
 
-
-  constructor(private http: HttpClient, private bienesRaicesBDService: BienesRaicesBDService) {}
+  constructor(
+    private http: HttpClient, 
+    private bienesRaicesBDService: BienesRaicesBDService,
+    private authService: AuthService
+  ) {}
 
   eliminarPropiedad(id: string) {
+    const mensaje = this.isAdmin ? 
+      '¿Estás seguro? Como administrador, puedes eliminar cualquier propiedad.' : 
+      '¿Estás seguro? No podrás revertir esta acción';
+    
     Swal.fire({
       title: '¿Estás seguro?',
-      text: "No podrás revertir esta acción",
+      text: mensaje,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
