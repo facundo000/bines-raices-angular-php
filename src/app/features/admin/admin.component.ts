@@ -64,7 +64,7 @@ export class AdminComponent implements OnInit {
   }
 
   private cargarPropiedades() {
-    this.bienesRaicesBDService.getData().subscribe({
+    this.bienesRaicesBDService.getDataUser().subscribe({
       next: (response) => {
         this.datos = response.map((data: any) => ({
           ...data,

@@ -1,7 +1,7 @@
 //header inicio
 .inicio-style {
     background-color: var(--grisOscuro);
-    background-image: url(/assets/img/header.jpg);
+    // background-image: url("../../../../assets/img/header.jpg");
     padding: 1rem 0 3rem 0;
 
     background-position: center center;
@@ -267,5 +267,6 @@
 @media (max-width: 768px /*tablet*/) {
     .navegacion-ul {
         display: block !important;
+        padding-right: 5rem;
     }
 }

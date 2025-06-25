@@ -15,8 +15,7 @@
         </thead>
         
         <tbody *ngFor="let dato of datos; let i = index">
-
-            <tr>
+             <tr>
                 <td >{{i + 1}}</td>
                 <td>{{dato.titulo}}</td>
                 <td>
@@ -31,7 +30,7 @@
                     <a (click)="eliminarPropiedad(dato.id)" class="boton boton-rojo" style="cursor: pointer;">Eliminar</a>
                     <a [routerLink]="['editar', dato.id]" class="boton boton-celeste">Editar</a>
                 </td>
-            </tr>
-        </tbody>
+            </tr> 
+        </tbody>        
     </table>
 </main>

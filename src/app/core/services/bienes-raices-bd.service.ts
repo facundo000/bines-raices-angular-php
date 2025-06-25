@@ -16,6 +16,12 @@ export class BienesRaicesBDService {
   getData(): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/v1/propiedades`);
   }
+  getDataUser(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization',`Bearer ${ token }`);
+    
+    return this.http.get(`${this.baseUrl}/api/v1/propiedades/mis-propiedades`, { headers });
+  }
 
   getDataByid(id: string): Observable<Propiedades|undefined>{
     return this.http.get<Propiedades>(`${this.baseUrl}/api/v1/propiedades/${ id }`)
