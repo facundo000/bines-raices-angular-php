@@ -18,6 +18,7 @@ export class AdminComponent implements OnInit {
   url = environment.urlImg;
   isAdmin: boolean = false;
   currentUser: any = null;
+  userRoles: string[] = [];
 
   constructor(
     private http: HttpClient, 
@@ -74,23 +75,53 @@ export class AdminComponent implements OnInit {
   }
 
   private cargarPropiedades() {
-    this.bienesRaicesBDService.getDataUser().subscribe({
-      next: (response) => {
-        this.datos = response.map((data: any) => ({
-          ...data,
-          imagen: data.imagen ? {
-            id: data.imagen.id,
-            url: this.processImageUrl(data.imagen.url)
-          } : {
-            id: null,
-            url: ''
-          }
-        }));
-      },
-      error: (error) => {
-        console.error('Error al obtener los datos:', error);
-      }
-    });
+    // Obtener información del usuario actual
+    this.currentUser = this.authService.currentUser();
+    this.userRoles = this.authService.getUserRoles();
+    this.isAdmin = this.authService.isUserAdmin();
+    
+    console.log('Usuario actual:', this.currentUser);
+    console.log('Roles del usuario:', this.userRoles);
+    console.log('¿Es admin?:', this.isAdmin);
+    
+    // Cargar propiedades según el rol
+    if (this.isAdmin) {
+      this.bienesRaicesBDService.getDataAdmin().subscribe({
+        next: (response) => {
+          this.datos = response.map((data: any) => ({
+            ...data,
+            imagen: data.imagen ? {
+              id: data.imagen.id,
+              url: this.processImageUrl(data.imagen.url)
+            } : {
+              id: null,
+              url: ''
+            }
+          }));
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos de admin:', error);
+        }
+      });
+    } else {
+      this.bienesRaicesBDService.getDataUser().subscribe({
+        next: (response) => {
+          this.datos = response.map((data: any) => ({
+            ...data,
+            imagen: data.imagen ? {
+              id: data.imagen.id,
+              url: this.processImageUrl(data.imagen.url)
+            } : {
+              id: null,
+              url: ''
+            }
+          }));
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos del usuario:', error);
+        }
+      });
+    }
   }
 
   ngOnInit(): void {

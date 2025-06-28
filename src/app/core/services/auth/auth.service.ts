@@ -1,6 +1,6 @@
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, throwError, switchMap } from 'rxjs';
 import { environment } from 'src/environmet';
 import { AuthStatus, LoginResponse, User } from '../interfaces';
 import { CheckTokenResponse } from '../interfaces/check-token.response';
@@ -43,8 +43,13 @@ export class AuthService {
 
     return this.http.post<LoginResponse>(url, body)
     .pipe(
-      map( ({user, token})  => this.setAuthentication(user, token)),      
-      
+      switchMap(({user, token}) => {
+        // Guardar el token temporalmente
+        localStorage.setItem('token', token);
+        
+        // Verificar el estado de autenticación para obtener información completa
+        return this.checkAuthStatus();
+      }),
       catchError(err => throwError(() => err.error.message)      
       )
     );
@@ -76,6 +81,24 @@ export class AuthService {
         return of(false);
       })
     );
+  }
+
+  // Método para verificar si el usuario actual es admin
+  isUserAdmin(): boolean {
+    const user = this.currentUser();
+    return user?.roles?.includes('admin') || user?.roles?.includes('ADMIN') || false;
+  }
+
+  // Método para obtener los roles del usuario actual
+  getUserRoles(): string[] {
+    const user = this.currentUser();
+    return user?.roles || [];
+  }
+
+  // Método para verificar si el usuario tiene un rol específico
+  hasRole(role: string): boolean {
+    const user = this.currentUser();
+    return user?.roles?.includes(role) || false;
   }
 
 }
